@@ -1,37 +1,41 @@
-a = True
-b = False
+import telebot
+from telebot import types
 
-print(a and b)
-print((a and b) or b)
-print((a and b) or not (a and b))
-print(a and b or not (a or b) or b)
-print(b and b or not a and (a or b or a) or not (a or b))
-print( 1 << 2)
-print((1 and 0) or (1 >> 1))
-print((1 and 0) or (1 >> 0))
-print((5 and 7) ^ (7 or 2))
+bot = telebot.TeleBot("5947205414:AAFiHNyVuoIUIVaAN7j6mCBWa4KzKafNY0w")
+@bot.message_handler(commands=["start"])
+def start(message):
+    mess = f"Привет, <b>{message.from_user.first_name}</b>"
+    bot.send_message(message.chat.id, mess, parse_mode="html")
 
 
-num1 = 4
-num2 = 22
-if (num1<num2):
-    print(num1)
-else:
-    print(num2)
+# @bot.message_handler()
+# def get_user_text(message):
+#    if message.text == "Hello":
+#         bot.send_message(message.chat.id, "Здравствуй!", parse_mode="html")
+#   elif message.text == "id":
+#        bot.send_message(message.chat.id, f"Твой ID: {message.from_user.id}", parse_mode="html")
+#    else:
+#       bot.send_message(message.chat.id, "I dont understand", parse_mode="html")
 
 
-
-num3 = 41
-num4 = 124
-num5 = 456
-if (num3>num4) and (num3>num5):
-    print(num3)
-elif (num4>num3) and (num4>num5):
-    print(num4)
-else:
-    print(num5)
+@bot.message_handler(content_types=["photo"])
+def get_user_photo(message):
+    bot.send_message(message.chat.id, "Прикольное фото")
 
 
-base = [3,5,58]
-print(len(base))
+@bot.message_handler(commands=["website"])
+def website(message):
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton("Посетить веб сайт", url="https://mai.ru"))
+    bot.send_message(message.chat.id, "Откройте ссылку", reply_markup=markup)
 
+@bot.message_handler(commands=["help"])
+def website(message):
+    markup = types.ReplyKeyboardMarkup()
+    website = types.KeyboardButton("Веб сайт")
+    start = types.KeyboardButton("Start")
+    markup.add(website, start)
+    bot.send_message(message.chat.id, "Откройте ссылку", reply_markup=markup)
+
+
+bot.polling(none_stop=True)
